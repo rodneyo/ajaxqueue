@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="css/flat-ui.css" rel="stylesheet">
+
+    <link rel="shortcut icon" href="images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <script src="js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="page-header">
+        <h1>Simple Message Queueing <small>with PHP and JQuery</small></h1>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-5">
+              <div class="form-group">
+                <textarea id="uuids" class="form-control" rows="20" placeholder="Add UUIDS"></textarea>
+                <br />
+                <button type="submit" id="btn-submit" class="btn btn-block
+                  btn-primary">Submit
+                </button>
+              </div>
+              <!--- Processing Table --->
+              <div id="processing-table-container">
+                <table class="table table-striped table-hover table-bordered"
+                  id="uuid-process-table">
+                  <thead>
+                    <tr>
+                      <th>UUID</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="ajax-row">
+                      <td>96289e349075496d8788ba4fc1472fbd</td>
+                      <td class="text-info"><strong>Pending <img
+                          src="images/ajax-loader.gif"></strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <button type="submit" id="btn-submit-more" class="btn btn-block
+                  btn-primary">Submit More
+                </button>
+              </div>
+          </div>
+        </div>
+      </div> 
+  </div><!-- /.container -->
+  <footer>
+  <div class="bottom-menu navbar navbar-fixed-bottom">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2 navbar-brand">
+          <a href="#fakelink">Code</a> 
+        </div>
+        <div class="col-md-8">
+          <ul class="bottom-links">
+            <li>About Me</li>
+            <li>Blog</li>
+          </ul>
+        </div>
+      <div>
+      <div class="col-md-2">
+        <ul class="bottom-icons">
+          <li><a href="#fakelink" class="fui-twitter"></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </footer>
+
+
+    <!-- Load JS here for greater good =============================-->
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="js/jquery.ui.touch-punch.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-select.js"></script>
+    <script src="js/bootstrap-switch.js"></script>
+    <script src="js/flatui-checkbox.js"></script>
+    <script src="js/flatui-radio.js"></script>
+    <script src="js/jquery.tagsinput.js"></script>
+    <script src="js/jquery.placeholder.js"></script>
+    <script src="js/ajaxqueue/Queue.js"></script>
+
+    <script type ="text/javascript">
+      $(document).ready(function() {
+        Queue.initQueue();
+      });
+
+    </script>
+  </body>
+</html>
