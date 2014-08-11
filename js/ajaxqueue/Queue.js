@@ -1,5 +1,9 @@
 Queue = {
-  post_url: 'queue_processor.php',
+  get_url: 'queue_processor.php',
+
+  loading_img: '<img src="images/ajax-loader.gif">',
+
+  ajax_request: [],
 
   initQueue : function() {
     $("div#processing-table-container").hide();
@@ -20,7 +24,7 @@ Queue = {
     var uuid_array = Queue.validateUUIDs();
     var queue = $.map(uuid_array, function(element, index) { return index });
 
-    Queue.processQueue(queue, 10, Queue.doAjaxBatch, Queue.doDone);
+    Queue.processQueue(queue, 5, Queue.doAjaxBatch, Queue.doDone, uuid_array);
 
   },
 
@@ -29,35 +33,37 @@ Queue = {
      $(".form-group").show();
   },
 
-  processQueue : function(queue, num, ajaxBatch, done) {
+  processQueue : function(queue, num, ajaxBatch, done, uuid_array) {
     var items = queue.splice(0, num),
         count = items.length;
 
     if (!count) {
-        done && doDone(); 
+        done && Queue.doDone(); 
         return;
     }
 
     for (var i = 0; i < count; i++) {
         ajaxBatch(items[i], function(cancel) {
             if (Queue.update_canceled == true) {
-                q = [];
+                queue = [];
                 count = 1;
             } 
-            --count || Queue.processQueue(q, num, doAjaxBatch, done);
-        });
+            --count || Queue.processQueue(queue, num, ajaxBatch, done, uuid_array);
+        },
+        uuid_array
+        );
     }
   },
 
   showStatus : function(uuid, status_class) {
     var uuid_htmlid = '#' + uuid;
-    $(uuid_htmlid).attr('class', status_class + 'bold');
+    $(uuid_htmlid).attr('class', status_class);
 
     switch (status_class) {
         case "update":
 
             $(uuid_htmlid).text("Updating");
-            $(uuid_htmlid).last().append(Qeuue.loader_img);
+            $(uuid_htmlid).last().append(Queue.loading_img);
             break;
 
         case "success":
@@ -97,7 +103,7 @@ Queue = {
         var process_table_tr = 
           '<tr class="ajax-row">' +
           '<td>' + uuid_array[i] + '</td>' +
-          '<td id=' + uuid_array[i].substring(1,6) + '" class="pending">Pending</td>' +
+          '<td id="' + uuid_array[i].substring(1,6) + '" class="pending">Pending</td>' +
           '</tr>';
 
         $("#uuid-process-table").last().append(process_table_tr);
@@ -106,12 +112,35 @@ Queue = {
     return uuid_array;
   },
 
-  doAjaxBatch : function(item, done) {
+  doAjaxBatch : function(item, done, uuid_array) {
+    Queue.showStatus(uuid_array[item].substring(1,6), 'update') 
 
-   Queue.showStatus(uuid_array[item].substring(1,6), 'reset') 
+    // add the counter
+
+    $.ajax({
+        url: Queue.get_url + '/' + uuid_array[item],
+        
+        beforeSend: function (jqXHR) {
+            Queue.ajax_request.push(jqXHR)
+        },
+        dataType: 'json',
+        
+        success: function(success) {
+            if (success) {
+                Queue.showStatus(uuid_array[item].substring(1,6), 'success'); 
+                done();
+            } else {
+                Queue.showStatus(uuid_array[item].substring(1,6), 'failure'); 
+                done()
+            }
+        },
+
+        error: function(jqXHR, textStatus) {
+        }
+    })
   },
 
   doDone : function() {
-    alert("calling from doDone");
+    //alert("calling from doDone");
   }
 }
